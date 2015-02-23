@@ -121,13 +121,7 @@ And add the mailman to start with the system
 
     sudo chkconfig --levels 235 mailman on
 
-Start mailman and create a symbolic link inside cgi-bin
-
-.. code-block::
-
-    sudo /etc/init.d/mailman start
-    cd /usr/lib/mailman/cgi-bin/
-    sudo ln -s ./ mailman
+Mailman folders: /usr/lib/mailman/cgi-bin/ and /lib/mailman/cgi-bin/
 
 Create a config file to mailman inside nginx
 
@@ -138,26 +132,34 @@ Create a config file to mailman inside nginx
 .. code-block::
 
     server {
-            server_name localhost;
-            listen 8080;
+      server_name localhost;
+      listen 80;
     
-            location /mailman/cgi-bin {
-                   root /usr/lib;
-                   fastcgi_split_path_info (^/mailman/cgi-bin/[^/]*)(.*)$;
-                   include /etc/nginx/fastcgi_params;
-                   fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                   fastcgi_param PATH_INFO $fastcgi_path_info;
-                   fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
-                   fastcgi_intercept_errors on;
-                   fastcgi_pass unix:/var/run/fcgiwrap.socket;
-            }
-            location /images/mailman {
-                   alias /usr/lib/mailman/icons;
-            }
-            location /pipermail {
-                   alias /var/lib/mailman/archives/public;
-                   autoindex on;
-            }
+      location = / {
+        rewrite ^ /mailman/cgi-bin/listinfo permanent;
+      }
+    
+      location / {
+        rewrite ^ /mailman/cgi-bin$uri?$args;
+      }
+    
+      location /mailman/cgi-bin/ {
+        root /usr/lib/;
+        fastcgi_split_path_info (^/mailman/cgi-bin/[^/]*)(.*)$;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
+        fastcgi_intercept_errors on;
+        fastcgi_pass unix:/var/run/fcgiwrap.socket;
+      }
+      location /icons {
+        alias /usr/lib/mailman/icons;
+      }
+      location /pipermail {
+        alias /var/lib/mailman/archives/public;
+        autoindex on;
+      }
     }
 
 .. code-block::
