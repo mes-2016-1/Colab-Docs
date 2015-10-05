@@ -133,7 +133,7 @@ Create a config file to mailman inside nginx
 
     server {
       server_name localhost;
-      listen 80;
+      listen 8080;
     
       location = / {
         rewrite ^ /mailman/cgi-bin/listinfo permanent;
@@ -182,7 +182,13 @@ Add this line in the end of file
 
 .. code-block::
 
-    DEFAULT_URL_PATTERN = 'https://%s/mailman/cgi-bin/'
+    DEFAULT_URL_PATTERN = 'http://%s:8080/mailman/cgi-bin/'
+
+Now change the default fqdn.
+
+.. code-block::
+    DEFAULT_URL_HOST   = 'localhost'
+    DEFAULT_EMAIL_HOST = 'localhost.localdomain'
     
 .. code-block::
 
@@ -209,6 +215,11 @@ Put spaw-fcgi to start with the system, and start it
 
     sudo chkconfig --levels 235 spawn-fcgi on
     sudo /etc/init.d/spawn-fcgi start
+
+Change private archive permissions by adding execution permission to other users:
+
+.. code-block::
+    sudo chmod o+rx /var/lib/mailman/archives/private
 
 Restart the services
 
