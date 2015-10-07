@@ -43,7 +43,7 @@ Now you can install spawn fcgi
 .. code-block::
 
     sudo yum install spawn-fcgi -y
-    
+
 And edit the spawn-fgci configuration file
 
 .. code-block::
@@ -60,7 +60,7 @@ And edit the spawn-fgci configuration file
     OPTIONS="-u $FCGI_USER -g $FCGI_GROUP -s $FCGI_SOCKET -S $FCGI_EXTRA_OPTIONS -F 1 -P /var/run/spawn-fcgi.pid -- $FCGI_PROGRAM"
 
 Save and quit
-    
+
 .. code-block::
 
     [ESC]:wq!
@@ -70,7 +70,7 @@ Install mailman
 .. code-block::
 
     sudo yum install mailman -y
-    
+
 Create a list, in this case we called it ``mailman``
 
 .. code-block::
@@ -78,13 +78,13 @@ Create a list, in this case we called it ``mailman``
     sudo /usr/lib/mailman/bin/newlist mailman
 
 Put a real email in ``Enter the email of the person running the list:``. And put a password in ``Initial mailman password:``, we used ``admin`` as password.
-    
+
 And add that list to the aliases file
 
 .. code-block::
 
     sudo vim /etc/aliases
-    
+
 .. code-block::
 
     ## mailman mailing list
@@ -108,13 +108,13 @@ Now, reset the aliases
 .. code-block::
 
     sudo newaliases
-    
+
 Restart postfix
 
 .. code-block::
 
-    sudo /etc/init.d/postfix restart
-    
+    sudo systemctl restart postfix
+
 And add the mailman to start with the system
 
 .. code-block::
@@ -128,21 +128,21 @@ Create a config file to mailman inside nginx
 .. code-block::
 
     sudo vim /etc/nginx/conf.d/list.conf
-    
+
 .. code-block::
 
     server {
       server_name localhost;
       listen 8080;
-    
+
       location = / {
         rewrite ^ /mailman/cgi-bin/listinfo permanent;
       }
-    
+
       location / {
         rewrite ^ /mailman/cgi-bin$uri?$args;
       }
-    
+
       location /mailman/cgi-bin/ {
         root /usr/lib/;
         fastcgi_split_path_info (^/mailman/cgi-bin/[^/]*)(.*)$;
@@ -170,7 +170,7 @@ Restart nginx to update the new configuration
 
 .. code-block::
 
-    sudo service nginx restart
+    sudo systemctl restrat nginx
 
 Edit the config script of mailman, to fix the url used by it.
 
@@ -189,13 +189,13 @@ Now change the default fqdn.
 .. code-block::
     DEFAULT_URL_HOST   = 'localhost'
     DEFAULT_EMAIL_HOST = 'localhost.localdomain'
-    
+
 .. code-block::
 
     [ESC]:wq!
-    
+
 Run the fix_url and restart mailman.
-    
+
 .. code-block::
 
     sudo /usr/lib/mailman/bin/withlist -l -a -r fix_url
@@ -208,7 +208,7 @@ Add nginx to the apache's user group (create by mailman), to grant all the right
 .. code-block::
 
     sudo usermod -a -G apache nginx
-    
+
 Put spaw-fcgi to start with the system, and start it
 
 .. code-block::
@@ -219,15 +219,15 @@ Put spaw-fcgi to start with the system, and start it
 Change private archive permissions by adding execution permission to other users:
 
 .. code-block::
-    sudo chmod o+rx /var/lib/mailman/archives/private
+    sudo chmod -R o+rx /var/lib/mailman/archives/private
 
 Restart the services
 
 .. code-block::
 
-    sudo service mailman restart
-    sudo service nginx restart
+    sudo systemctl restart mailman
+    sudo systemctl restart nginx
 
 *NOTE:*
 
-    You can access mailman in this url: `http://localhost:8080/mailman/cgi-bin/listinfo <http://localhost:8080/mailman/cgi-bin/listinfo>`_ 
+    You can access mailman in this url: `http://localhost:8080/mailman/cgi-bin/listinfo <http://localhost:8080/mailman/cgi-bin/listinfo>`_
