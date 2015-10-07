@@ -187,6 +187,7 @@ Add this line in the end of file
 Now change the default fqdn.
 
 .. code-block::
+
     DEFAULT_URL_HOST   = 'localhost'
     DEFAULT_EMAIL_HOST = 'localhost.localdomain'
 
