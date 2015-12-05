@@ -170,7 +170,7 @@ Restart nginx to update the new configuration
 
 .. code-block::
 
-    sudo systemctl restrat nginx
+    sudo systemctl restart nginx
 
 Edit the config script of mailman, to fix the url used by it.
 
