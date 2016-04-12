@@ -1,6 +1,10 @@
 Mailman
 =======
-Para a instalação do funcionar corretamente com outras aplicações as portas necessárias devem estar abertas para a máquina virtual que acessá-la
+Para a instalação do Mailman funcionar corretamente com outras aplicações, as portas necessárias devem estar abertas para a máquina virtual que acessá-la. A porta utilizada pelo Mailman é a 8080, portanto ela deve ser mapeada no VagrantFile, adicionando a seguinte linha:
+
+.. code-block::
+
+  config.vm.network :forwarded_port, guest: 8080, host: 8080 # Mailman
 
 Nginx 1.6
 =========
@@ -232,3 +236,48 @@ Restart the services
 *NOTE:*
 
     You can access mailman in this url: `http://localhost:8080/mailman/cgi-bin/listinfo <http://localhost:8080/mailman/cgi-bin/listinfo>`_
+
+Mailman-api
+===========
+
+Para instalar o mailman-api siga os seguintes passos:
+
+1 - Clone o repositório do mailman-api dentro do colab:
+
+.. code-block::
+
+  cd colab/
+  git clone https://github.com/TracyWebTech/mailman-api.git
+
+2 - Abra outro terminal, vá até a pasta do colab e entre na VM do colab:
+
+.. code-block::
+
+  vagrant up
+  vagrant ssh
+
+3 - Entre no virtualenv do colab:
+
+.. code-block::
+
+  workon colab
+
+
+4 - Entre na pasta do mailman-api:
+
+.. code-block::
+
+  cd  /vagrant/mailman-api/
+
+5 - Instale o mailman-api:
+
+.. code-block::
+
+  pip install -e .
+
+
+6 - Execute o comando abaixo para rodar o mailman-api:
+
+.. code-block::
+
+  sudo `which python` scripts/mailman-api
