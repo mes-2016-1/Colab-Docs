@@ -7,31 +7,24 @@ Taiga-Vagrant
 
 Clone the taiga-vagrant repository
 
-```
-    git clone https://github.com/taigaio/taiga-vagrant.git
-```
+   $ git clone https://github.com/taigaio/taiga-vagrant.git
+
 
 Add this line to the Vagrantfile
 
-```
-    config.vm.network "private_network", ip: "172.28.124.3"
-```
+   config.vm.network "private_network", ip: "172.28.124.3"
+
 
 Boot the VM environment running this command on terminal
 
-```
-    vagrant up
-```
+   $ vagrant up
 
 Open the taiga.conf file
 
-```
-vi /etc/nginx/sites-available/taiga
-```
+   $ vi /etc/nginx/sites-available/taiga
 
 Replace all the code with this new code
 
-```
     server {
         listen 80 default_server;
         listen 8000 default_server;
@@ -68,49 +61,38 @@ Replace all the code with this new code
             alias /home/vagrant/taiga-back/media;
         }
     }
-```
 
 Add this line before the "<!-- Main meta-->" line
 
-```
-    <base href="/taiga/" />
-```
+   <base href="/taiga/" />
 
 Colab configuration
 =========
 
 Add this line to the Vagrantfile
 
-```
-    config.vm.network "private_network", ip: "172.28.124.4"
-```
+
+   config.vm.network "private_network", ip: "172.28.124.4"
 
 Clone the colab-taiga-plugin repository
 
-```
-    git clone https://github.com/mes-2016-1/colab-taiga-plugin.git
-```
+   $ git clone https://github.com/mes-2016-1/colab-taiga-plugin.git
 
 Go inside the colab_taiga_plugin folder through the colab VM and run
-```
-    pip install -e .
-```
+
+   $ pip install -e .
+
 
 Create sites-available folder inside nginx
 
-```
-sudo mkdir /etc/nginx/sites-available
-```
+   $ sudo mkdir /etc/nginx/sites-available
 
 Create the colab.conf file running and open it
 
-```
-sudo vi /etc/nginx/sites-available/colab
-```
+   $ sudo vi /etc/nginx/sites-available/colab
 
 Add the following code to the colab file and save it
 
-```
     server {
       listen                8001;
       server_name           _;
@@ -130,34 +112,23 @@ Add the following code to the colab file and save it
         proxy_pass http://172.28.128.3;
       }
     }
-```
 
 Open the taiga.py file
 
-```
-    vi /etc/colab/plugins.d/taiga.py
-```
+   $ vi /etc/colab/plugins.d/taiga.py
 
 Change the upstream to the following
 
-```
-    upstream = 'http://172.28.128.3'
-```
+   upstream = 'http://172.28.128.3'
 
 Open the file
 
-```
-    sudo vi /etc/nginx/nginx.conf
-```
+   $ sudo vi /etc/nginx/nginx.conf
 
 Add the following line below "include  /etc/nginx/mime.types;"
 
-```
     include             /etc/nginx/sites-available/*;
-```
 
 Restart de nginx service
 
-```
-sudo service nginx restart
-```
+   $ sudo service nginx restart
