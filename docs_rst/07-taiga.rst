@@ -117,6 +117,10 @@ Add the following code to the colab file and save it
       }
     }
 
+Copy taiga.py from plugins/../tests.d to /etc/colab/plugins.d/
+
+
+
 Open the taiga.py file
 
    $ vi /etc/colab/plugins.d/taiga.py
