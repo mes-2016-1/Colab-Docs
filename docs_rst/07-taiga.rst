@@ -25,7 +25,7 @@ Enter in taiga VM
 
 Open the taiga.conf file
 
-   $ vi /etc/nginx/sites-available/taiga
+   $ sudo vi /etc/nginx/sites-available/taiga
 
 Replace all the code with this new code
 
