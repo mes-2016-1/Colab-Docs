@@ -18,6 +18,10 @@ Add this line to the Vagrantfile
 Boot the VM environment running this command on terminal
 
    $ vagrant up
+   
+Enter in taiga VM  
+
+   $ vagrant ssh
 
 Open the taiga.conf file
 
