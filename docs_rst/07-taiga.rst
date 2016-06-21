@@ -66,7 +66,11 @@ Replace all the code with this new code
         }
     }
 
-Add this line before the "<!-- Main meta-->" line
+Open the index.html file
+
+   cd /home/vagrant/taiga-front/dist
+
+Add this line before the "<!-- Main meta-->" line in the index.html
 
    <base href="/taiga/" />
 
